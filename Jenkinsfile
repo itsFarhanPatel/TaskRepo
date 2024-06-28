@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         registry = "docker.io"
-        dockerImage = "itsfarhanpatel/newupdated-img"
+        dockerImage = "itsfarhanpatel/img1"
     }
 
     stages {
@@ -32,7 +32,7 @@ pipeline {
 
        stage('Deploy Docker Container') {
             steps {
-                    sh 'docker run -d -p 3000:3000 itsfarhanpatel/newupdated-img '
+                    sh 'docker run -d -p 3000:3000 itsfarhanpatel/img1 '
                 }
             }
         }
