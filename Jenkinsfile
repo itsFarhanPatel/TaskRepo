@@ -36,13 +36,4 @@ pipeline {
                 }
             }
         }
-    
-    post {
-        always {
-            cleanWs()
-        }
-        failure {
-            echo 'Deployment failed.'
-        }
-    }
 }
