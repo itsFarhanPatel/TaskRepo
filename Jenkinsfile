@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         registry = "docker.io"
-        dockerImage = "itsfarhanpatel/image-2"
+     // dockerImage = "itsfarhanpatel/image-2"
     }
 
     stages {
@@ -11,29 +11,28 @@ pipeline {
                 git 'https://github.com/itsFarhanPatel/TaskRepo.git'
             }
         }
-
-        stage('Build Docker image') {
-            steps {
+        stage('Build & Tag Docker Image'){
+            steps{
                 script {
-                    dockerImage = docker.build("${registry}/${dockerImage}")
-                }
-            }
-        }
-
-        stage('Push Docker image') {
-            steps {
-                script {
-                    docker.withRegistry('', 'docker-credentials') {
-                        dockerImage.push('latest')
+                   withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'docker') {
+                            sh "docker build -t itsfarhanpatel/my-image:latest ."
                     }
-                }
+               }
             }
         }
-
-       stage('Deploy Docker Container') {
+        stage('Push Docker Image'){
+            steps{
+                script {
+                   withDockerRegistry(credentialsId: 'docker-credentials', toolName: 'docker') {
+                            sh "docker push itsfarhanpatel/my-image:latest"
+                    }
+               }
+            }
+        }
+        stage('Deploy Docker Container') {
             steps {
-                    sh 'docker run -d -p 3000:3000 itsfarhanpatel/image-2 '
+                    sh 'docker run -d -p 3000:3000 itsfarhanpatel/my-image:latest'
                 }
             }
-        }
-}
+    }        
+}    
